@@ -1,6 +1,6 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
 
 def login(request):
     response = "Hello, world"
-    return HttpResponse(response)
+    return render(request, 'html/login.html', {'var': response})
