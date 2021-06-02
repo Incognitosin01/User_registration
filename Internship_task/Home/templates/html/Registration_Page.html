@@ -12,7 +12,7 @@
         integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
 
     <!-- Custom CSS Link -->
-    <link rel="stylesheet" href="{% static '/CSS/registrartion_page.css' %}">
+    <link rel="stylesheet" href="{% static 'registration.css' %}">
 
     <title>User Registration</title>
 
@@ -20,7 +20,7 @@
 
 <body>
     <header>
-        <div class="py-5 text-center" style="font-family:'Lobster',cursive"">
+        <div class="py-5 text-center" style="font-family:'Lobster',cursive; color: black;">
             <h2>USER REGISTRATION</h2>
         </div>
     </header>
@@ -29,19 +29,19 @@
             <main>
                 <div class="container row" style="margin-top: 50px;">
                     <div class="col-md-7 col-lg-8 mx-auto">
-                        <h4 class="mb-3">Please Enter Your Credentials</h4>
-                        <form onsubmit="return validation()" action="" method="POST">
+                        <h4 class="mb-3" style="color: black;">Please Enter Your Credentials</h4>
+                        <form action="{% url 'Home:login' %}" method="POST">
                             {% csrf_token %}
                             <div class="row g-3" style="margin-top: 30px;">
                                 <div class="col-sm-6">
-                                    <label for="firstName" class="form-label">First name</label>
+                                    <label for="firstName" class="form-label" style="color: black;">First name</label>
                                     <input type="text" class="form-control" id="firstName" placeholder="First Name"
                                         name="first_name" autocomplete="off">
                                     <span id="fn" class="text-danger" style="font-weight: 500;"></span>
                                 </div>
 
                                 <div class="col-sm-6">
-                                    <label for="lastName" class="form-label">Last name</label>
+                                    <label for="lastName" class="form-label" style="color: black;">Last name</label>
                                     <input type="text" class="form-control" id="lastName" placeholder="Last Name"
                                         name="last_name" autocomplete="off">
                                     <span id="ln" class="text-danger" style="font-weight: 500;"></span>
@@ -49,19 +49,19 @@
 
 
                                 <div class="col-12">
-                                    <label for="email" class="form-label">Email</label>
+                                    <label for="email" class="form-label" style="color: black;">Email</label>
                                     <input type="email" class="form-control" id="email" placeholder="you@example.com"
                                         name="email" autocomplete="off">
                                     <span id="em" class="text-danger" style="font-weight: 500;"></span>
                                 </div>
                                 <div class="col-8">
-                                    <label for="phone_number" class="form-label">Phone Number</label>
+                                    <label for="phone_number" class="form-label" style="color: black;">Phone Number</label>
                                     <input class="form-control" id="phone" placeholder="9292929292" name="phone_no"
                                         autocomplete="off">
                                     <span id="ph" class="text-danger" style="font-weight: 500;"></span>
                                 </div>
                                 <div class="col-12">
-                                    <label for="password" class="form-label">Password</label>
+                                    <label for="password" class="form-label" style="color: black;">Password</label>
                                     <input name='password' type="password" class="form-control" id="password"
                                         placeholder="Password" autocomplete="off">
                                     <span id="pass" class="text-danger" style="font-weight: 500;"></span>

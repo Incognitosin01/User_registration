@@ -1,0 +1,42 @@
+body{
+    
+    background-size: cover;
+    background-position:center;
+    background-repeat: no-repeat;
+    
+}
+
+    
+
+
+.navbar{
+    background-color:#1C2331;
+    color: white;
+    opacity: 1;
+}
+.navbar:hover{
+    opacity: 2;
+}
+.btn{
+    margin-top: 20px;
+    color: black;
+}
+
+
+
+
+.form-control{
+    font-size: 16px !important;
+    border-radius: 6 !important;
+    color: black !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+input::placeholder{
+    color: black !important;
+}
+
+.flexing{
+    display: inline-flex;
+}
