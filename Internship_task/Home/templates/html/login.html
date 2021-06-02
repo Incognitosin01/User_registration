@@ -1,10 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-</head>
-<body>
-    Here's your variable {{ var }}
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+
+{%block head %}
+<title>Login</title>
+<link href="{%static 'login.css' %}" rel="stylesheet" >
+{% endblock %}
+
+{%block content%}
+<main>
+    <form method="post">
+        Sanity Check
+    </form>
+</main>
+{%endblock%}
