@@ -8,11 +8,11 @@ body {
     color: #000;
 }
 
-.student-profile .card {
+.user-profile .card {
     border-radius: 10px;
 }
 
-.student-profile .card .card-header .profile_img {
+.user-profile .card .card-header .profile_img {
     width: 150px;
     height: 150px;
     object-fit: cover;
@@ -21,19 +21,23 @@ body {
     border-radius: 50%;
 }
 
-.student-profile .card h3 {
+.user-profile .card h3 {
     font-size: 20px;
     font-weight: 700;
 }
 
-.student-profile .card p {
+.user-profile .card p {
     font-size: 16px;
     color: #000;
 }
 
-.student-profile .table th,
-.student-profile .table td {
+.user-profile .table th,
+.user-profile .table td {
     font-size: 14px;
     padding: 5px 10px;
     color: #000;
 }
+
+
+
+
