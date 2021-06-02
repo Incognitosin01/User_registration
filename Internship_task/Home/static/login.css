@@ -1,5 +1,6 @@
 *, *::after, *::before{ box-sizing: border-box; transition: all .5s linear}
 body{margin: 0; display: flex; min-height: 100vh; justify-content: center; align-items: center}
+:any-link{text-decoration: none; color: inherit;}
 
 main{
     display: flex;
@@ -11,7 +12,11 @@ main{
     box-shadow: 0 0 1px 2px #232;
 }
 
-main>div, main>form>label{display: flex;justify-content: space-between;gap: 10px}
+main>div, main>form>label{display: flex;justify-content: space-around;gap: 10px}
+main h2{height: 100%; width: 50%; text-align: center}
+main h2:not(.active){color: rgba(0, 0, 0, .6); border-left: 2px solid #333; font-size: .99em; align-self: center}
+main h2:not(.active):hover{color: rgb(0, 0, 200);text-decoration: underline}
+
 main>form{display: flex;flex-flow: column; border-top: 2px solid #222; padding: 1em}
 main>form>label{margin-bottom: .7em}
 label>input{border: none; outline: none; border-bottom: 2px solid #777}
