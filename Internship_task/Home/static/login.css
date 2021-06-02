@@ -1,2 +1,18 @@
-*, *::after, *::before{ box-sizing: border-box;}
+*, *::after, *::before{ box-sizing: border-box; transition: all .5s linear}
 body{margin: 0; display: flex; min-height: 100vh; justify-content: center; align-items: center}
+
+main{
+    display: flex;
+    flex-flow: column;
+    max-width: 100%;
+    margin: .5em;
+    padding: .8em;
+    width: max-content;
+    box-shadow: 0 0 1px 2px #232;
+}
+
+main>div, main>form>label{display: flex;justify-content: space-between;gap: 10px}
+main>form{display: flex;flex-flow: column; border-top: 2px solid #222; padding: 1em}
+main>form>label{margin-bottom: .7em}
+label>input{border: none; outline: none; border-bottom: 2px solid #777}
+label>input:focus{border-bottom-color: #111}
