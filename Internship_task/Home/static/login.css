@@ -3,7 +3,10 @@ body{margin: 0; display: flex; min-height: 100vh; justify-content: center; align
 :any-link{text-decoration: none; color: inherit;}
 :any-link:hover{text-decoration: underline;}
 
+
+
 main{
+    
     display: flex;
     flex-flow: column;
     max-width: 100%;

@@ -7,8 +7,11 @@ body{
 }
 
     
+
+
 .btn{
-    margin-top: 20px;
+    margin-top: 30px;
+    margin-bottom: 30px;
     color: black;
 }
 
@@ -16,6 +19,7 @@ body{
 .form-control{
     font-size: 18px !important;
     border-radius: 6 !important;
+    border-color: black;
     color: black !important;
     border-color: black;
     background: transparent !important;
@@ -24,7 +28,6 @@ body{
 
 input::placeholder{
     color: grey !important;
-    
 }
 
 .form-label{
