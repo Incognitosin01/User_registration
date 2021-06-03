@@ -6,13 +6,15 @@ body{
     
 }
 
-    
+
 .btn{
     margin-top: 20px;
     color: black;
 }
 
-
+.form-label{
+    font-size: 20px !important;
+}
 .form-control{
     font-size: 18px !important;
     border-radius: 6 !important;
@@ -24,12 +26,8 @@ body{
 
 input::placeholder{
     color: grey !important;
-    
 }
 
-.form-label{
-    font-size: 20px !important;
-}
 .flexing{
     display: inline-flex;
 }

@@ -68,6 +68,5 @@ def login(request):
 def profile(request):
     return render(request, 'html/index.html')
 
-
 def user_app(request):
     return render(request, 'html/application.html')
