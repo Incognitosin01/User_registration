@@ -8,17 +8,20 @@
 <!-- Custom CSS Link -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <title>User Registration</title>
+
 {% endblock %}
 
 
 {%block content %}
+{% include 'messages.html' %}
 <header>
     <div class="py-5 text-center" style="font-family:'Lobster',cursive; color: black;">
         <h2>USER REGISTRATION</h2>
     </div>
 </header>
-{% include 'messages.html' %}
+
 <div class=" container body-container">
     <main>
         <div class="container row" style="margin-top: 50px;">
@@ -52,7 +55,7 @@
                             <label for="phone_number" class="form-label col-12">Phone Number</label>
                             <input class="form-control col-12" id="phone" placeholder="9292929292" autocomplete="off"
                                 type="tel" name="phone" />
-                            <span id="ph" class="text-danger" style="font-weight: 500;"></span>
+                            <span id="ph" class="text-danger col-12" style="font-weight: 500;"></span>
                         </div>
                         <div class="col-12">
                             <label for="password" class="form-label" style="color: black;">Password</label>
@@ -61,7 +64,7 @@
                             <span id="pass" class="text-danger" style="font-weight: 500;"></span>
                         </div>
                         <div class="col-lg-12">
-                            <button class="btn btn-outline-success w-100" name="submit" value="submit" type="submit">
+                            <button class="btn btn-outline-success w-100 mb-3" name="submit" value="submit" type="submit">
                                 SUBMIT
                             </button>
                         </div>
@@ -150,6 +153,13 @@
             return false;
         }
     }
+</script>
+<script>
+    setTimeout(function () {
+        if ($('#msg').length > 0) {
+            $('#msg').remove();
+        }
+    }, 5500)
 </script>
 <script>
 
