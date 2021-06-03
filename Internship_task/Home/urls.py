@@ -10,6 +10,5 @@ urlpatterns = [
     path('login/', views.login, name="log"),
     path('profile/', views.profile, name="profile"),
     path('user_application/',views.user_app, name="application"),
-    path('verify/',views.verify, name="verify"),
-    path('test/',views.test, name="test")
+    path('verify/',views.verify, name="verify")
 ]

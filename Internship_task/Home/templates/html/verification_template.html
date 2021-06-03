@@ -8,6 +8,6 @@
 </head>
 <body>
   Yahoo, you've received a verification email
-  <a href="{{request.scheme}}://{{request.get_host}}{%url 'Home:verify'%}?key={{key}}&email={{email}}" >Click to verify</a>
+  <a href="{{url | safe}}" >Click to verify</a>
 </body>
 </html>

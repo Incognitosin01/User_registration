@@ -1,8 +1,6 @@
 from django.shortcuts import render
 from django.views import View
 from django.contrib.auth.models import User
-from .models import Application
-from django.core.mail import send_mail
 from django.shortcuts import redirect
 from django.conf import settings
 from django.urls import reverse
@@ -11,6 +9,7 @@ import hashlib
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+
 
 class Registration(View):
     def get(self, request):
@@ -23,8 +22,8 @@ class Registration(View):
         password = request.POST['password']
         email = request.POST['email']
 
-        user = User.objects.create_user(username=phone_number, first_name=first_name, last_name=last_name, 
-                                        password=password, email=email)
+        user = User.objects.create_user(username=phone_number, first_name=first_name,
+                                        last_name=last_name, password=password, email=email)
         user.is_active = False
         user.save()
 
@@ -32,12 +31,16 @@ class Registration(View):
         hashed_string = hash_object.hexdigest()
 
         subject, from_email, to = 'Verification', settings.EMAIL_HOST_USER, user.email
-        html_content = render_to_string('html/verification_template.html', {'key': hashed_string, 'email': user.email})
+        url = f"{request.scheme}://{request.get_host()}{reverse('Home:verify')}?key={hashed_string}&email={user.email}"
+        html_content = render_to_string('html/verification_template.html', {'url': url})
         text_content = strip_tags(html_content)
         msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
+        messages.success(request, "We've sent you a verification mail. \
+        Follow the instructions in mail to complete your registration")
         return redirect("/")
+
 
 def verify(request):
     email = request.GET['email']
@@ -45,22 +48,20 @@ def verify(request):
     if hashlib.md5(email.encode()).hexdigest() == key:
         messages.success(request, 'Verification successfull', 'success')
         user = User.objects.get(email=email)
-        user.is_active = True 
+        user.is_active = True
         user.save()
         return redirect(reverse('Home:log'))
     messages.error(request, 'Verification failed', 'error')
     return redirect('/')
 
-def test(request):
-    hashed_string = "bkdshhfsbksb"
-    email = "msdfv@gmail.com"
-    return render(request, 'html/verification_template.html', {'key': hashed_string, 'email': email})
 
 def login(request):
     return render(request, 'html/login.html')
 
+
 def profile(request):
-    return render(request,'html/index.html')
+    return render(request, 'html/index.html')
+
 
 def user_app(request):
-    return render(request,'html/application.html')
+    return render(request, 'html/application.html')
