@@ -12,8 +12,8 @@
         integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
 
     <!-- Custom CSS Link -->
-    <link rel="stylesheet" href="{% static 'registration.css' %}">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
     <title>User Registration</title>
 
 </head>
@@ -29,14 +29,14 @@
             <main>
                 <div class="container row" style="margin-top: 50px;">
                     <div class="col-md-7 col-lg-8 mx-auto">
-                        <h4 class="mb-3" style="color: black;">Please Enter Your Credentials</h4>
-                        <form action="{% url 'Home:login' %}" method="POST">
+                        <h4 class="mb-3">Please Enter Your Credentials</h4>
+                        <form onsubmit="return validation()" action="{% url 'Home:log' %}" method="POST">
                             {% csrf_token %}
                             <div class="row g-3" style="margin-top: 30px;">
                                 <div class="col-sm-6">
                                     <label for="firstName" class="form-label" style="color: black;">First name</label>
                                     <input type="text" class="form-control" id="firstName" placeholder="First Name"
-                                        name="first_name" autocomplete="off">
+                                        name="first_name" autocomplete="off" autofocus="autofocus">
                                     <span id="fn" class="text-danger" style="font-weight: 500;"></span>
                                 </div>
 
@@ -54,10 +54,10 @@
                                         name="email" autocomplete="off">
                                     <span id="em" class="text-danger" style="font-weight: 500;"></span>
                                 </div>
-                                <div class="col-8">
-                                    <label for="phone_number" class="form-label" style="color: black;">Phone Number</label>
-                                    <input class="form-control" id="phone" placeholder="9292929292" name="phone_no"
-                                        autocomplete="off">
+                                <div class="col-12">
+                                    <label for="phone_number" class="form-label col-12">Phone Number</label>
+                                    <input class="form-control col-12" id="phone" placeholder="9292929292"
+                                        autocomplete="off" type="tel" name="phone" />
                                     <span id="ph" class="text-danger" style="font-weight: 500;"></span>
                                 </div>
                                 <div class="col-12">
@@ -155,6 +155,16 @@
                     return false;
                 }
             }
+        </script>
+        <script>
+            
+            const phoneInputField = document.querySelector("#phone");
+            const phoneInput = window.intlTelInput(phoneInputField, {
+                utilsScript:
+                    "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+            
+            });
+            const phoneNumber = phoneInput.getNumber();
         </script>
 </body>
 

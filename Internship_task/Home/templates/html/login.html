@@ -9,7 +9,7 @@
 {%block content%}
 <main>
     {# TODO: Replace # with register url#}
-    <div><h2 class="active">Login</h2><h2><a href="#">Register</a></h2></div>
+    <div><h2 class="active">Login</h2><h2><a href="{% url 'Home:register' %}">Register</a></h2></div>
     <form method="post" autocomplete="off">
         <label for="contact"><span>Mobile Number</span><input type="tel" name="contact" required autofocus="autofocus"></label>
         <label for="password"><span>Password</span><input type="password" name="password" required></label>
