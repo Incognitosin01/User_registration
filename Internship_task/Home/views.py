@@ -10,6 +10,8 @@ import os
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from .models import Application
+from django.core.mail import send_mail
 
 
 class Registration(View):
@@ -26,7 +28,6 @@ class Registration(View):
         phone_number = request.POST['phone']
         password = request.POST['password']
         email = request.POST['email']
-
         user = User.objects.create_user(username=phone_number, first_name=first_name,
                                         last_name=last_name, password=password, email=email)
         user.is_active = False
@@ -70,3 +71,27 @@ def profile(request):
 
 def user_app(request):
     return render(request, 'html/application.html')
+
+def application(request):
+    if request.method=="POST":
+        email= request.POST['email']
+        address = request.POST['address']
+        resume = request.POST['resume']
+        adhaar = request.POST['adhaar']
+        marksheet = request.POST['marksheet']
+        user=User.objects.get(email=email)
+        print(user.username)
+        application = Application(user= user.username,contact=user.username, address=address, aadhar=adhaar, resume=resume, Marksheet=marksheet)
+        application.save()
+        send_mail(
+            "Application",
+            "Your Application has submitted successfully",
+            settings.EMAIL_HOST_USER,
+            email,
+            fail_silently=False,
+        )
+    return redirect('/')
+
+        
+
+

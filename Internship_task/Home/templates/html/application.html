@@ -23,7 +23,7 @@
         <main>
                 <div class="container row " style="margin-top: 50px;">
                     <div class="col-md-7 col-lg-8  mx-auto">
-                        <form action="{% url 'Home:profile' %}" method="POST">
+                        <form action="{% url 'Home:app_submit' %}" method="POST">
                             {% csrf_token %}
                             <h2 style="text-align: center;font-family: Georgia;color: black; font-weight: 600;margin-top: 10px; margin-bottom: 20px;">
                                 Application Form
@@ -45,19 +45,19 @@
                             </div>
                             <div class="col-12 mx-auto" style="color: black;">
                                 <label class="form-label" for="address" style="font-size:18px;">Address</label>
-                                <input type="text" name="age" id="" class="form-control" >
+                                <input type="text" name="address" id="" class="form-control" >
                             </div>
                             <div class="col-12 mx-auto" style="color: black;">
                                 <label class="form-label" for="resume" style="font-size:18px;">Resume</label>
-                                <input type="file" name="file" id="" class="form-control"  >
+                                <input type="file" name="resume" id="" class="form-control"  >
                                 </div>
                                 <div class="col-12 mx-auto" style="color: black;">
                                 <label class="form-label" for="adhaar" style="font-size:18px;">Adhaar Card</label>
-                                <input type="file" name="file" id="" class="form-control"  >
+                                <input type="file" name="adhaar" id="" class="form-control"  >
                                 </div>
                                 <div class="col-12 mx-auto" style="color: black;">
                                 <label class="form-label" for="Marksheet" style="font-size:18px;">Marksheet</label>
-                                <input type="file" name="file" id="" class="form-control"  >
+                                <input type="file" name="marksheet" id="" class="form-control"  >
                             </div>
                             <div class="col-12 mx-auto">
                                 <button class="btn btn-dark " style="margin-top: 10px; color: rgb(255, 246, 246); margin-bottom: 30px;" name="submit" value="submit"
