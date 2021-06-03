@@ -6,12 +6,17 @@ from django.conf import settings
 from django.urls import reverse
 from django.contrib import messages
 import hashlib
+import os
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
 
 class Registration(View):
+    def __init__(self):
+        super(Registration, self).__init__()
+        self.hash_util = os.environ.get('verification_hash') or 'random_string'
+
     def get(self, request):
         return render(request, 'html/Registration_Page.html')
 
@@ -27,7 +32,7 @@ class Registration(View):
         user.is_active = False
         user.save()
 
-        hash_object = hashlib.md5(email.encode())
+        hash_object = hashlib.md5((email + self.hash_util).encode())
         hashed_string = hash_object.hexdigest()
 
         subject, from_email, to = 'Verification', settings.EMAIL_HOST_USER, user.email
@@ -43,10 +48,11 @@ class Registration(View):
 
 
 def verify(request):
+    hash_util = os.environ.get('verification_hash') or 'random_string'
     email = request.GET['email']
     key = request.GET['key']
-    if hashlib.md5(email.encode()).hexdigest() == key:
-        messages.success(request, 'Verification successfull', 'success')
+    if hashlib.md5((email + hash_util).encode()).hexdigest() == key:
+        messages.success(request, 'Verification successful', 'success')
         user = User.objects.get(email=email)
         user.is_active = True
         user.save()
