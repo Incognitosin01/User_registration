@@ -1,9 +1,6 @@
-from json.encoder import JSONEncoder
-from django.contrib import auth
 from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.views import View
-from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.conf import settings
 from django.urls import reverse
@@ -14,9 +11,9 @@ import json
 from django.core.mail import EmailMultiAlternatives, message
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from .models import CustomUser,Application
+from .models import (CustomUser, Application)
 from django.core.mail import send_mail
-from django.contrib.auth import (authenticate, login)
+from django.contrib.auth import (logout, login)
 from typing import Any
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioException
@@ -75,16 +72,29 @@ def verify(request):
 
 
 def login_user(request):
+    if request.user.is_authenticated:
+        return redirect(reverse("Home:profile"))
     if request.method == 'GET':
         return render(request, 'html/login.html')
     
-    user = authenticate(request, contact=request.POST['contact'], password=request.POST['password'])
-    if user is not None:
-        login(request, user)
-        return redirect(reverse('Home:application'))
+    user = CustomUser.objects.filter(contact=request.POST['contact'])
+    if not user:
+        messages.error(request, "You've not registered yet")
+        return redirect(reverse('Home: register'))
+    
+    authenticated = user.first().check_password(request.POST['password'])
+    if authenticated:
+        login(request, user.first())
+        return redirect(reverse("Home:profile"))
     messages.error(request, "Invalid credentials")
     return redirect(reverse("Home:login"))
 
+def logout_user(request):
+    if request.user.is_anonymous:
+        return redirect(reverse('Home:login'))
+    logout(request)
+    messages.success(request, 'Successfully logged out')
+    return redirect(reverse('Home:register'))
 
 def profile(request):
     return render(request, 'html/index.html')
