@@ -69,3 +69,9 @@ main>form>div{display: flex; justify-content: space-around; align-items: center;
 .alert-danger::before{
     content: "❎";
 }
+
+.nikal{
+    position: relative;
+    opacity: 0;
+    transition: opacity 2s;
+}

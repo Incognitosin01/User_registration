@@ -136,7 +136,8 @@ class VerifyOTP(View):
         
         otp = str(req.json()['code'])
         message = f"Your one time password for login is {otp}"
-        self.twilio_client.messages.create(to=phone_number, from_=self.sender, body=message)
+
+        # self.twilio_client.messages.create(to=f"+{phone_number}", from_=self.sender, body=message)
         return JsonResponse({'status': 201, 'message': 'OTP sent successfully', 'otp': otp})
 
     def post(self, request):
