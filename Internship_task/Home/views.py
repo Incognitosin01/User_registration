@@ -114,7 +114,7 @@ def logout_user(request):
         return redirect(reverse('Home:login'))
     logout(request)
     messages.success(request, 'Successfully logged out')
-    return redirect(reverse('Home:register'))
+    return redirect(reverse('Home:login'))
 
 def profile(request):
     if request.user.is_anonymous:
