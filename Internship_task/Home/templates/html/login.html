@@ -94,6 +94,10 @@
                 }).then(res=>res.json())
                 .then(({status, message})=>{
                     notify(status, message);
+                    if(status){
+                        otp_button.classList.add('hidden');
+                        login_button.classList.remove('hidden');
+                    }
                 })
             }
         })
