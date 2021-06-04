@@ -1,4 +1,5 @@
 from json.encoder import JSONEncoder
+from django.contrib import auth
 from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.views import View
@@ -9,7 +10,8 @@ from django.urls import reverse
 from django.contrib import messages
 import hashlib
 import os
-from django.core.mail import EmailMultiAlternatives
+import json
+from django.core.mail import EmailMultiAlternatives, message
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from .models import CustomUser,Application
@@ -17,7 +19,10 @@ from django.core.mail import send_mail
 from django.contrib.auth import (authenticate, login)
 from typing import Any
 from twilio.rest import Client
+from twilio.base.exceptions import TwilioException
 import requests
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 
 class Registration(View):
@@ -73,7 +78,7 @@ def login_user(request):
     if request.method == 'GET':
         return render(request, 'html/login.html')
     
-    user = authenticate(request, username=request.POST['contact'], password=request.POST['password'])
+    user = authenticate(request, contact=request.POST['contact'], password=request.POST['password'])
     if user is not None:
         login(request, user)
         return redirect(reverse('Home:application'))
@@ -107,26 +112,37 @@ def application(request):
     return redirect('/')
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class VerifyOTP(View):
     def __init__(self, **kwargs: Any) -> None:
-        ACCOUNTT_SID = 'ACad1fb18f925ae72719cf7a36ba4eaa42'
-        AUTHH_TOKEN = 'b1249124b7af7fd3a94bacfb0324a7f8'
         super().__init__(**kwargs)
         self.otp_url = 'https://api.generateotp.com/'
-        self.twilio_client = Client(ACCOUNTT_SID,AUTHH_TOKEN)
+        try:
+            self.twilio_client = Client()
+            self.sender = os.getenv('TWILIO_NUMBER')
+        except TwilioException:
+            from .twilio_conf import TWILIO_NUMBER, AUTH_TOKEN, ACCOUNT_SID
+            self.twilio_client = Client(ACCOUNT_SID, AUTH_TOKEN)
+            self.sender = TWILIO_NUMBER
 
     def get(self, request):
-        # phone_number = request.GET['phone']
-        req = requests.post(f"{self.otp_url}/generate", data={'initiator_id': '7796845665' })
-        
+        phone_number = request.GET['phone']
+        country_code = request.GET['country_code']
+
+        req = requests.post(f"{self.otp_url}/generate", data={'initiator_id': phone_number.strip(country_code)})
+
         if req.status_code != 201:
             return JsonResponse({'status': 500, 'message': 'Error occurred, please retry'})
         
         otp = str(req.json()['code'])
         message = f"Your one time password for login is {otp}"
-        self.twilio_client.messages.create(to='+917796845665', from_='+16303608758', body=message)
-        return JsonResponse({'status': 201, 'message': 'OTP sent successfully'})
+        self.twilio_client.messages.create(to=phone_number, from_=self.sender, body=message)
+        return JsonResponse({'status': 201, 'message': 'OTP sent successfully', 'otp': otp})
 
     def post(self, request):
-        print(request.session.get('phone_number'))
-        return JsonResponse({'status': 200})
+        p = json.loads(request.body)
+        otp = p['otp_code']
+        phone_number = p['phone']
+
+        req = requests.post(f"{self.otp_url}/validate/{otp}/{phone_number}")
+        return JsonResponse(req.json())
