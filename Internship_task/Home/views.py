@@ -66,10 +66,12 @@ def verify(request):
         user = CustomUser.objects.get(email=email)
         user.is_active = True
         user.save()
-        return redirect(reverse('Home:login'))
+        return redirect(reverse('Home:verified_login'))
     messages.error(request, 'Verification failed', 'error')
     return redirect('/')
 
+def verified_login(request):
+    return render(request,'html/login.html')
 
 def login_user(request):
     if request.user.is_authenticated:
@@ -138,8 +140,10 @@ class VerifyOTP(View):
     def get(self, request):
         phone_number = request.GET['phone']
         country_code = request.GET['country_code']
-
-        req = requests.post(f"{self.otp_url}/generate", data={'initiator_id': phone_number.strip(country_code)})
+        
+        country_code_size = len(country_code)
+        
+        req = requests.post(f"{self.otp_url}/generate", data={'initiator_id': phone_number[country_code_size:]})
 
         if req.status_code != 201:
             return JsonResponse({'status': 500, 'message': 'Error occurred, please retry'})
@@ -154,6 +158,6 @@ class VerifyOTP(View):
         p = json.loads(request.body)
         otp = p['otp_code']
         phone_number = p['phone']
-
+        print("hy",phone_number)
         req = requests.post(f"{self.otp_url}/validate/{otp}/{phone_number}")
         return JsonResponse(req.json())
