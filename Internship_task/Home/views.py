@@ -12,6 +12,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from .models import Application
 from django.core.mail import send_mail
+from django.contrib.auth import (authenticate, login)
 
 
 class Registration(View):
@@ -57,13 +58,21 @@ def verify(request):
         user = User.objects.get(email=email)
         user.is_active = True
         user.save()
-        return redirect(reverse('Home:log'))
+        return redirect(reverse('Home:login'))
     messages.error(request, 'Verification failed', 'error')
     return redirect('/')
 
 
-def login(request):
-    return render(request, 'html/login.html')
+def login_user(request):
+    if request.method == 'GET':
+        return render(request, 'html/login.html')
+    
+    user = authenticate(request, username=request.POST['contact'], password=request.POST['password'])
+    if user is not None:
+        login(request, user)
+        return redirect(reverse('Home:application'))
+    messages.error(request, "Invalid credentials")
+    return redirect(reverse("Home:login"))
 
 
 def profile(request):
@@ -91,7 +100,3 @@ def application(request):
             fail_silently=False,
         )
     return redirect('/')
-
-        
-
-

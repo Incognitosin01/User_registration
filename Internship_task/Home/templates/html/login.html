@@ -12,18 +12,20 @@
 {% endblock %}
 
 {%block content%}
+<aside id="messages">
 {% include 'messages.html' %}
+</aside>
 <main>
     <div><h2 class="active">Login</h2><h2><a href="{% url 'Home:register' %}">Register</a></h2></div>
     <form method="post" autocomplete="off">
         {% csrf_token %}
         <label for="contact"><span>Mobile Number</span><input type="tel" name="contact" required autofocus="autofocus" autocomplete="tel"></label>
         <label for="password"><span>Password</span><input type="password" name="password" autocomplete="password" required></label>
-        <label for="otp" class="hidden"><span>OTP</span><input type="number" name="otp" autocomplete="otp" required></label>
+        <!-- <label for="otp" class="hidden"><span>OTP</span><input type="number" name="otp" autocomplete="otp" required></label> -->
         <div>
 
-        <input type="submit" value="Send OTP" id="otp">
-        <input type="submit" value="Login" disabled id="login" class="hidden">
+        <!-- <input type="submit" value="Send OTP" id="otp"> -->
+        <input type="submit" value="Login" id="login">
         {# TODO: Add forgot password link#}
         </button>
         </div>
@@ -45,16 +47,24 @@
         // Remove autofilled incorrect credentials by chrome
         setTimeout(()=>{document.forms[0].reset();}, 1000);
 
-        otp_button.addEventListener('click', event=>{
-            event.preventDefault();
-            if(!phoneInput.isValidNumber()){
-                console.log('Invalid')
-                // alert("Invalid Number")
-                return;
-            }
-            console.log("Valid ", phoneInput.getNumber());
-            otp_button.classList.add('hidden');
-            login_button.classList.remove('hidden');
+        // Will be applicable with successful otp verification
+        // otp_button.addEventListener('click', event=>{
+        //     event.preventDefault();
+        //     if(!phoneInput.isValidNumber()){
+        //         console.log('Invalid')
+        //         // alert("Invalid Number")
+        //         return;
+        //     }
+        //     console.log("Valid ", phoneInput.getNumber());
+        //     otp_button.classList.add('hidden');
+        //     login_button.classList.remove('hidden');
+        // })
+
+        const messages = document.querySelectorAll('.alert');
+        messages.forEach(msg=>{
+            msg.addEventListener('click', ()=>{
+                msg.style.display = 'none';
+            })
         })
     })
     </script>
