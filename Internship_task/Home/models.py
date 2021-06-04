@@ -1,17 +1,25 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
-from django.contrib.auth.models import User
-
+from django.contrib.auth.models import User,AbstractUser
 # Create your models here.
 
-class Application(models.Model):
-  user = models.ForeignKey(User, on_delete=models.CASCADE)
-  contact = PhoneNumberField()
-  address = models.TextField(max_length=250)
+class CustomUser(AbstractUser):
 
+  contact = PhoneNumberField()
+
+  class Meta:
+    ordering = ['first_name','last_name','email',]
+
+  # def __str__(self):
+  #   return f"{self.CustomUser.get_full_name()}"
+
+class Application(models.Model):
+
+  F_key = models.ForeignKey(CustomUser,default=None,on_delete=models.CASCADE)
+  address = models.TextField(max_length=250)
   resume = models.FileField()
   aadhar = models.FileField()
   Marksheet = models.FileField()
 
-  def __str__(self):
-    return f"{self.user.get_full_name()}"
+  # def _str_(self):
+  #   return f"{self.CustomUser.get_full_name()}"
