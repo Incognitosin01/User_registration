@@ -35,17 +35,17 @@
                         <div class="row g-4 mx-auto" style="margin-top: 30px;">
                             <div class="col-sm-6 mx-auto" style="color: black;">
                                 <label class="form-label" for="fname" style="font-size:18px;">First name</label>
-                                <input type="text" name="fname" id="" class="form-control" placeholder="First name">
+                                <input type="text" name="fname" id="" value={{request.user.first_name}} class="form-control">
                             </div>
                             <div class="col-sm-6 mx-auto" style="color: black;">
                                 <label class="form-label" for="lname" style="font-size:18px;">Last name</label>
-                                <input type="text" name="lname" id="" class="form-control" placeholder="Last name">
+                                <input type="text" name="lname" id="" value={{request.user.last_name}} class="form-control" >
                             </div>
 
 
                             <div class="col-12 mx-auto" style="color: black;">
                                 <label class="form-label" for="email" style="font-size:18px;">Email</label>
-                                <input type="email" name="email" id="" class="form-control" placeholder="Email Address"
+                                <input type="email" name="email" id="" class="form-control" value={{request.user.email}} 
                                     required>
                             </div>
                             <div class="col-12 mx-auto" style="color: black;">

@@ -15,7 +15,7 @@ class CustomUser(AbstractUser):
 
 class Application(models.Model):
 
-  F_key = models.ForeignKey(CustomUser,default=None,on_delete=models.CASCADE)
+  F_key = models.ForeignKey(CustomUser,default=None,on_delete=models.CASCADE, unique=True)
   address = models.TextField(max_length=250)
   resume = models.FileField()
   aadhar = models.FileField()
