@@ -12,17 +12,20 @@
 {% endblock %}
 
 {%block content%}
+<aside id="messages">
 {% include 'messages.html' %}
+</aside>
 <main>
-    {# TODO: Replace # with register url#}
-    <div><h2 class="active">Login</h2><h2><a href="#">Register</a></h2></div>
-    <form method="post" autocomplete="off" action="#">
-        <label for="contact"><span>Mobile Number</span><input type="tel" name="contact" required autofocus="autofocus"></label>
-        <label for="password"><span>Password</span><input type="password" name="password" required></label>
-        <label for="otp" class="hidden"><span>OTP</span><input type="number" name="otp" required></label>
+    <div><h2 class="active">Login</h2><h2><a href="{% url 'Home:register' %}">Register</a></h2></div>
+    <form method="post" autocomplete="off">
+        {% csrf_token %}
+        <label for="contact"><span>Mobile Number</span><input type="tel" name="contact" required autofocus="autofocus" autocomplete="tel"></label>
+        <label for="password"><span>Password</span><input type="password" name="password" autocomplete="password" required></label>
+        <!-- <label for="otp" class="hidden"><span>OTP</span><input type="number" name="otp" autocomplete="otp" required></label> -->
         <div>
 
-        <input type="submit" value="Login" disabled>
+        <!-- <input type="submit" value="Send OTP" id="otp"> -->
+        <input type="submit" value="Login" id="login">
         {# TODO: Add forgot password link#}
         <a href="#">Forgot password?</a>
         </div>
@@ -31,11 +34,38 @@
 {%endblock%}
 {% block scripts %}
     <script>
-    const phoneInputField = document.querySelector("input[type=tel]");
-    const phoneInput = window.intlTelInput(phoneInputField, {
-        utilsScript:
-            "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
 
-    });
+    window.addEventListener('DOMContentLoaded', ()=>{
+        const phoneInputField = document.querySelector("input[type=tel]");
+        const phoneInput = window.intlTelInput(phoneInputField, {
+            utilsScript:
+                "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        });
+        const otp_button = document.querySelector('#otp');
+        const login_button = document.querySelector('#login');
+
+        // Remove autofilled incorrect credentials by chrome
+        setTimeout(()=>{document.forms[0].reset();}, 1000);
+
+        // Will be applicable with successful otp verification
+        // otp_button.addEventListener('click', event=>{
+        //     event.preventDefault();
+        //     if(!phoneInput.isValidNumber()){
+        //         console.log('Invalid')
+        //         // alert("Invalid Number")
+        //         return;
+        //     }
+        //     console.log("Valid ", phoneInput.getNumber());
+        //     otp_button.classList.add('hidden');
+        //     login_button.classList.remove('hidden');
+        // })
+
+        const messages = document.querySelectorAll('.alert');
+        messages.forEach(msg=>{
+            msg.addEventListener('click', ()=>{
+                msg.style.display = 'none';
+            })
+        })
+    })
     </script>
 {% endblock %}
