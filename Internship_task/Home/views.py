@@ -1,3 +1,5 @@
+from json.encoder import JSONEncoder
+from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.views import View
 from django.contrib.auth.models import User
@@ -11,8 +13,11 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from .models import CustomUser,Application
-from django.core.mail import send_mail
+from django.core.mail import send_mai
 from django.contrib.auth import (authenticate, login)
+from typing import Any
+from twilio.rest import Client
+import requests
 
 
 class Registration(View):
@@ -100,3 +105,26 @@ def application(request):
             fail_silently=False,
         )
     return redirect('/')
+
+
+class VerifyOTP(View):
+    def __init__(self, **kwargs: Any) -> None:
+        super().__init__(**kwargs)
+        self.otp_url = 'https://api.generateotp.com/'
+        self.twilio_client = Client()
+
+    def get(self, request):
+        phone_number = request.GET['phone']
+        req = requests.post(f"{self.otp_url}/generate", data={'initiator_id': phone_number})
+
+        if req.status_code != 201:
+            return JsonResponse({'status': 500, 'message': 'Error occurred, please retry'})
+        
+        otp = str(req.json()['code'])
+        message = f"Your one time password for login is {otp}"
+        self.twilio_client.messages.create(to=phone_number, from_=os.getenv('TWILIO_NUMBER'), body=message)
+        return JsonResponse({'status': 201, 'message': 'OTP sent successfully'})
+
+    def post(self, request):
+        print(request.session.get('phone_number'))
+        return JsonResponse({'status': 200})
