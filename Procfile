@@ -1,1 +1,1 @@
-web: gunicorn Internship_task.wsgi:application --log-file -
+web: gunicorn Internship_task.Internship_task.wsgi:application --log-file -
