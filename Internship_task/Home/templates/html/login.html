@@ -37,7 +37,7 @@
         function notify(status, message){
             const newMessage = document.createElement('div');
             newMessage.classList.add('alert');
-            newMessage.classList.add(`alert-${(status>=200 && status <300)?'success':'danger'}`);
+            newMessage.classList.add(`alert-${status === true || (status>=200 && status <300)?'success':'danger'}`);
             newMessage.textContent = message;
             newMessage.addEventListener('click', dismiss);
             messageBox.appendChild(newMessage);
@@ -57,6 +57,8 @@
         });
         const otp_button = document.querySelector('#otp');
         const login_button = document.querySelector('#login');
+        
+        const otp = document.querySelector("[name=otp]");
 
         // Remove autofilled incorrect credentials by chrome
         setTimeout(()=>{document.forms[0].reset();}, 1000);
@@ -71,15 +73,28 @@
             const number = phoneInput.getNumber();
             const country_code = phoneInput.getSelectedCountryData().dialCode;
             if(otp_button.dataset.sent === 'false'){
-                // OTP has not been sent
                 // Number doesn't send the `+` with rest of the digits
                 fetch(`{% url 'Home:otp' %}?phone=${number}&country_code=+${country_code}`)
                 .then(response=>response.json())
                 .then(({status, message})=>{
                     notify(status, message);
+                }).then(()=>{
+                    otp_button.dataset.sent = 'true';
+                    otp.parentElement.classList.remove('hidden');
                 })
             }else{
-                // OTP sent, verify it
+                const filteredNumber = number.slice(country_code.length+number.startsWith("+"));
+                fetch("{%url 'Home:otp'%}", {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({otp_code: otp.value, phone: filteredNumber})
+                }).then(res=>res.json())
+                .then(({status, message})=>{
+                    notify(status, message);
+                })
             }
         })
 
