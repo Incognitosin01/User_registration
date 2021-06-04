@@ -19,7 +19,7 @@
 </aside>
 <main>
     <div><h2 class="active">Login</h2><h2><a href="{% url 'Home:register' %}">Register</a></h2></div>
-    <form method="post" autocomplete="off">
+    <form method="post" action="{% url 'Home:login_check' %}"autocomplete="off">
         {% csrf_token %}
         <label for="contact"><span>Mobile Number</span><input type="tel" name="contact" required autofocus="autofocus" autocomplete="tel"></label>
         <label for="password"><span>Password</span><input type="password" name="password" autocomplete="password" required></label>
@@ -27,7 +27,7 @@
         <div>
 
         <input type="submit" class="btn btn-outline-dark" value="Send OTP" id="otp" data-sent="false">
-        <input onclick="applicable()" class="btn btn-outline-dark hidden" value="Login" id="login" >
+        <input type="submit" class="btn btn-outline-dark hidden" value="Login" id="login" >
         </div>
     </form>
 </main>

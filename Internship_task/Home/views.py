@@ -54,7 +54,7 @@ class Registration(View):
         msg.send()
         messages.success(request, "We've sent you a verification mail. \
         Follow the instructions in mail to complete your registration")
-        return redirect("/")
+        return redirect(reverse("Home:register"))
 
 
 def verify(request):
@@ -66,7 +66,7 @@ def verify(request):
         user = CustomUser.objects.get(email=email)
         user.is_active = True
         user.save()
-        return redirect(reverse('Home:verified_login'))
+        return redirect(reverse('Home:login'))
     messages.error(request, 'Verification failed', 'error')
     return redirect('/')
 
@@ -76,20 +76,37 @@ def verified_login(request):
 def login_user(request):
     if request.user.is_authenticated:
         return redirect(reverse("Home:profile"))
-    if request.method == 'GET':
+    else:
         return render(request, 'html/login.html')
     
-    user = CustomUser.objects.filter(contact=request.POST['contact'])
-    if not user:
-        messages.error(request, "You've not registered yet")
-        return redirect(reverse('Home: register'))
+    # user = CustomUser.objects.filter(contact=request.POST['contact'])
+    # if not user:
+    #     messages.error(request, "You've not registered yet")
+    #     return redirect(reverse('Home: register'))
     
-    authenticated = user.first().check_password(request.POST['password'])
-    if authenticated:
-        login(request, user.first())
-        return redirect(reverse("Home:profile"))
-    messages.error(request, "Invalid credentials")
-    return redirect(reverse("Home:login"))
+    # authenticated = user.first().check_password(request.POST['password'])
+    # if authenticated:
+    #     login(request, user.first())
+    #     return redirect(reverse("Home:profile"))
+    # messages.error(request, "Invalid credentials")
+    # return redirect(reverse("Home:login"))
+def login_check(request):
+    if request.method == "POST":
+        phone_number = request.POST['contact']
+        password = request.POST['password']
+        print(phone_number)
+        user = CustomUser.objects.filter(contact = phone_number)
+        if not user:
+            messages.error(request, "You've not registered yet")
+            return redirect(reverse('Home:register'))
+        else:
+            authenticated = user.first().check_password(request.POST['password'])
+            if authenticated:
+                login(request, user.first())
+                return redirect(reverse("Home:application"))
+        messages.error(request, "Invalid credentials")
+        return redirect(reverse("Home:login"))
+
 
 def logout_user(request):
     if request.user.is_anonymous:
@@ -99,7 +116,17 @@ def logout_user(request):
     return redirect(reverse('Home:register'))
 
 def profile(request):
-    return render(request, 'html/index.html')
+    if request.user.is_anonymous:
+        return redirect(reverse('Home:login'))
+    app = Application.objects.filter(F_key=request.user)
+    
+    if not app:
+        print("Hello")
+        messages.error(request,'Please fill application form first')
+        return redirect(reverse('Home:application'))
+    
+    app = Application.objects.values('address','resume','Marksheet','aadhar').get(F_key=request.user)
+    return render(request, 'html/index.html',{'addr':app['address'],'resume':app['resume'],'marks':app['Marksheet'],'aadhar':app['aadhar']})
 
 def user_app(request):
     return render(request, 'html/application.html')
@@ -121,7 +148,7 @@ def application(request):
             [email],
             fail_silently=False,
         )
-    return redirect('/')
+    return render(request,'html/index.html',{'addr':address,'resume':resume,'marks':marksheet,'aadhar':adhaar})
 
 
 @method_decorator(csrf_exempt, name='dispatch')
