@@ -42,14 +42,14 @@
         const otp_button = document.querySelector('#otp');
         const login_button = document.querySelector('#login');
 
-        {# Remove autofilled incorrect credentials by chrome #}
+        // Remove autofilled incorrect credentials by chrome
         setTimeout(()=>{document.forms[0].reset();}, 1000);
 
         otp_button.addEventListener('click', event=>{
             event.preventDefault();
             if(!phoneInput.isValidNumber()){
                 console.log('Invalid')
-                {#alert("Invalid Number")#}
+                // alert("Invalid Number")
                 return;
             }
             console.log("Valid ", phoneInput.getNumber());
