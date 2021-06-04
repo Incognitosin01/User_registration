@@ -86,6 +86,9 @@
     <button class="btn btn-outline-dark w-100 mb-3" name="submit" value="submit" type="submit" onclick="check()"><h5>EDIT</h5>
         
     </button>
+    <button class="btn btn-outline-dark w-100 mb-3" name="submit" value="submit" type="submit" onclick="logout()"><h5>LOG OUT</h5>
+        
+    </button>
 </div>
 </div>		      
 <!-- partial -->
@@ -101,6 +104,9 @@
     <script>
       function check(){
         location.pathname = "{% url 'Home:application' %}"
+      }
+      function logout(){
+        location.pathname = "{% url 'Home:logout' %}"
       }
     </script>
 	</body>

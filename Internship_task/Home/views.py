@@ -94,7 +94,8 @@ def login_check(request):
     if request.method == "POST":
         phone_number = request.POST['contact']
         password = request.POST['password']
-        phone_number=phone_number[-10:0:-1]
+        phone_number=phone_number[3:]
+        print(phone_number)
         user = CustomUser.objects.filter(contact = phone_number)
         if not user:
             messages.error(request, "You've not registered yet")
@@ -138,17 +139,20 @@ def application(request):
         resume = request.POST['resume']
         adhaar = request.POST['adhaar']
         marksheet = request.POST['marksheet']
-        user=CustomUser.objects.get(email=email)
-        app=Application.objects.get(F_key=request.user)
-        if app:
+        user=CustomUser.objects.get(email=request.user.email)
+        try:
+            app = Application.objects.get(F_key=request.user)
+            app=Application.objects.get(F_key=request.user)
             app.address=address
             app.aadhar=adhaar
             app.Marksheet=marksheet
             app.resume=resume
             app.save()
-        else:
+        except Application.DoesNotExist:
             application = Application(F_key=user,address=address, aadhar=adhaar, resume=resume, Marksheet=marksheet)
             application.save()
+    
+        
         send_mail(
             "Application",
             "Your Application has submitted successfully",
