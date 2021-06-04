@@ -1,1 +1,1 @@
-web:cd Internship_task && gunicorn Internship_task.wsgi --log-file -
+web:gunicorn Internship_task.Internship_task.wsgi --log-file -
