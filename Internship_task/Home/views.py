@@ -10,7 +10,7 @@ import os
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from .models import Application
+from .models import CustomUser,Application
 from django.core.mail import send_mail
 from django.contrib.auth import (authenticate, login)
 
@@ -29,8 +29,9 @@ class Registration(View):
         phone_number = request.POST['phone']
         password = request.POST['password']
         email = request.POST['email']
-        user = User.objects.create_user(username=phone_number, first_name=first_name,
-                                        last_name=last_name, password=password, email=email)
+
+        user = CustomUser.objects.create_user(username=email, first_name=first_name,last_name=last_name, password=password, email=email,contact=phone_number)
+        
         user.is_active = False
         user.save()
 
@@ -55,7 +56,7 @@ def verify(request):
     key = request.GET['key']
     if hashlib.md5((email + hash_util).encode()).hexdigest() == key:
         messages.success(request, 'Verification successful', 'success')
-        user = User.objects.get(email=email)
+        user = CustomUser.objects.get(email=email)
         user.is_active = True
         user.save()
         return redirect(reverse('Home:login'))
@@ -88,15 +89,14 @@ def application(request):
         resume = request.POST['resume']
         adhaar = request.POST['adhaar']
         marksheet = request.POST['marksheet']
-        user=User.objects.get(email=email)
-        print(user.username)
-        application = Application(user= user.username,contact=user.username, address=address, aadhar=adhaar, resume=resume, Marksheet=marksheet)
+        user=CustomUser.objects.get(email=email)
+        application = Application(F_key=user,address=address, aadhar=adhaar, resume=resume, Marksheet=marksheet)
         application.save()
         send_mail(
             "Application",
             "Your Application has submitted successfully",
             settings.EMAIL_HOST_USER,
-            email,
+            [email],
             fail_silently=False,
         )
     return redirect('/')
