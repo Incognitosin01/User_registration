@@ -94,14 +94,14 @@ def login_check(request):
     if request.method == "POST":
         phone_number = request.POST['contact']
         password = request.POST['password']
-        phone_number=phone_number[3:]
-        print(phone_number)
+
+        # contact=phone_number needs a full phone number with country code
         user = CustomUser.objects.filter(contact = phone_number)
         if not user:
             messages.error(request, "You've not registered yet")
             return redirect(reverse('Home:register'))
         else:
-            authenticated = user.first().check_password(request.POST['password'])
+            authenticated = user.first().check_password(password)
             if authenticated:
                 login(request, user.first())
                 return redirect(reverse("Home:application"))
@@ -118,11 +118,11 @@ def logout_user(request):
 
 def profile(request):
     if request.user.is_anonymous:
+        messages.error('You are not logged in')
         return redirect(reverse('Home:login'))
     app = Application.objects.filter(F_key=request.user)
     
     if not app:
-        print("Hello")
         messages.error(request,'Please fill application form first')
         return redirect(reverse('Home:application'))
     
@@ -197,6 +197,5 @@ class VerifyOTP(View):
         p = json.loads(request.body)
         otp = p['otp_code']
         phone_number = p['phone']
-        print("hy",phone_number)
         req = requests.post(f"{self.otp_url}/validate/{otp}/{phone_number}")
         return JsonResponse(req.json())
