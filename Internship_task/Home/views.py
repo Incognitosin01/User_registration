@@ -118,7 +118,7 @@ def logout_user(request):
 
 def profile(request):
     if request.user.is_anonymous:
-        messages.error('You are not logged in')
+        messages.error(request, 'You are not logged in')
         return redirect(reverse('Home:login'))
     app = Application.objects.filter(F_key=request.user)
     
@@ -130,6 +130,9 @@ def profile(request):
     return render(request, 'html/index.html',{'addr':app['address'],'resume':app['resume'],'marks':app['Marksheet'],'aadhar':app['aadhar']})
 
 def user_app(request):
+    if request.user.is_anonymous:
+        messages.error(request, 'You are not logged in')
+        return redirect(reverse('Home:login'))
     return render(request, 'html/application.html')
 
 def application(request):
