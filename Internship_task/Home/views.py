@@ -184,6 +184,10 @@ class VerifyOTP(View):
         country_code = request.GET['country_code']
         
         country_code_size = len(country_code)
+
+        user = CustomUser.objects.filter(contact=f"+{phone_number}")
+        if not user:
+            return JsonResponse({'status': 302,'message': 'Number you\'re trying to log in is not registered'})
         
         req = requests.post(f"{self.otp_url}/generate", data={'initiator_id': phone_number[country_code_size:]})
 

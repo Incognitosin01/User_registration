@@ -89,11 +89,12 @@
                 .then(response=>response.json())
                 .then(({status, message})=>{
                     notify(status, message);
+                    if(status<200 || status>=300) throw Error('There is a problem')
                 }).then(()=>{
                     otp_button.dataset.sent = 'true';
                     otp_button.value = 'Verify OTP'
                     otp.parentElement.classList.remove('hidden');
-                })
+                }).catch(()=>{})
             }else{
                 const filteredNumber = number.slice(country_code.length+number.startsWith("+"));
                 fetch("{%url 'Home:otp'%}", {
