@@ -123,19 +123,23 @@
             }, 6000)
             return false;
         }
-        var phone = document.getElementById('phone').value
-        if (phone == "") {
-            document.getElementById('ph').innerHTML = "Please provide your Phone Number !";
-            setTimeout(function () {
-                document.getElementById('ph').innerHTML = ""
-            }, 6000)
-            return false;
-        }
-        var reg_ph = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
-        if (!reg_ph.test(phone)) {
+        // var phone = document.getElementById('phone').value
+        // if (phone == "") {
+        //     document.getElementById('ph').innerHTML = "Please provide your Phone Number !";
+        //     setTimeout(function () {
+        //         document.getElementById('ph').innerHTML = ""
+        //     }, 6000)
+        //     return false;
+        // }
+        // const phoneInputField = document.querySelector("input[type=tel]");
+        // const phoneInput = window.intlTelInput(phoneInputField, {
+        //     utilsScript:
+        //         "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        // });
+        if (!phoneInput.isValidNumber()) {
             document.getElementById('ph').innerHTML = "Please provide valid Phone Number !";
             setTimeout(function () {
-                document.getElementById('ph').innerHTML = "";
+                document.getElementById('ph').innerHTML = ""
             }, 6000)
             return false;
         }

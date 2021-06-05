@@ -67,9 +67,9 @@
           <div class="card-body pt-0">
               <p>Documents submitted</p>
 
-              <b>Adhaar Card</b><p>{{aadhar}}</p>
-              <b>Marksheet</b><p>{{marks}}</p>
-              <b>Resume</b><p>{{resume}}</p>
+              <a href="{{aadhar | safe}}"><b>Adhaar Card</b></a>
+              <a href="{{marks | safe}}"><b>Marksheet</b></a>
+              <a href="{{resume | safe}}"><b>Resume</b></a>
 
           </div>
         </div>

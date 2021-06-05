@@ -19,3 +19,4 @@ urlpatterns = [
     path('otp/', views.VerifyOTP.as_view(), name="otp"),
 ]
 
+
