@@ -34,6 +34,7 @@ class Registration(View):
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
         phone_number = request.POST['phone']
+        print(request.POST)
         password = request.POST['password']
         email = request.POST['email']
 
@@ -73,15 +74,16 @@ def verify(request):
 def login_user(request):
     if request.method == 'GET':
         if request.user.is_authenticated:
-            return redirect(reverse("Home:profile"))
+            return redirect(reverse("Home:application"))
         else:
             return render(request, 'html/login.html')
     
     phone_number = request.POST['contact']
     password = request.POST['password']
-
+    
     # contact=phone_number needs a full phone number with country code
     user = CustomUser.objects.filter(contact = phone_number)
+    print(user,phone_number)
     if not user:
         messages.error(request, "You've not registered yet")
         return redirect(reverse('Home:register'))
@@ -175,8 +177,11 @@ class VerifyOTP(View):
 
         user = CustomUser.objects.filter(contact=f"+{phone_number}")
         if not user:
+            
             return JsonResponse({'status': 302,'message': 'Number you\'re trying to log in is not registered'})
-        
+        user = user.first()
+        if not user.is_active:
+            return JsonResponse({'status':303,'message':'Email not verified'})
         req = requests.post(f"{self.otp_url}/generate", data={'initiator_id': phone_number[country_code_size:]})
 
         if req.status_code != 201:
