@@ -70,43 +70,28 @@ def verify(request):
     messages.error(request, 'Verification failed', 'error')
     return redirect('/')
 
-def verified_login(request):
-    return render(request,'html/login.html')
-
 def login_user(request):
-    if request.user.is_authenticated:
-        return redirect(reverse("Home:profile"))
-    else:
-        return render(request, 'html/login.html')
-    
-    # user = CustomUser.objects.filter(contact=request.POST['contact'])
-    # if not user:
-    #     messages.error(request, "You've not registered yet")
-    #     return redirect(reverse('Home: register'))
-    
-    # authenticated = user.first().check_password(request.POST['password'])
-    # if authenticated:
-    #     login(request, user.first())
-    #     return redirect(reverse("Home:profile"))
-    # messages.error(request, "Invalid credentials")
-    # return redirect(reverse("Home:login"))
-def login_check(request):
-    if request.method == "POST":
-        phone_number = request.POST['contact']
-        password = request.POST['password']
-
-        # contact=phone_number needs a full phone number with country code
-        user = CustomUser.objects.filter(contact = phone_number)
-        if not user:
-            messages.error(request, "You've not registered yet")
-            return redirect(reverse('Home:register'))
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            return redirect(reverse("Home:profile"))
         else:
-            authenticated = user.first().check_password(password)
-            if authenticated:
-                login(request, user.first())
-                return redirect(reverse("Home:application"))
-        messages.error(request, "Invalid credentials")
-        return redirect(reverse("Home:login"))
+            return render(request, 'html/login.html')
+    
+    phone_number = request.POST['contact']
+    password = request.POST['password']
+
+    # contact=phone_number needs a full phone number with country code
+    user = CustomUser.objects.filter(contact = phone_number)
+    if not user:
+        messages.error(request, "You've not registered yet")
+        return redirect(reverse('Home:register'))
+    else:
+        authenticated = user.first().check_password(password)
+        if authenticated:
+            login(request, user.first())
+            return redirect(reverse("Home:application"))
+    messages.error(request, "Invalid credentials")
+    return redirect(reverse("Home:login"))
 
 
 def logout_user(request):
