@@ -16,7 +16,7 @@ from django.core.mail import send_mail
 from django.contrib.auth import (logout, login)
 from typing import Any
 from twilio.rest import Client
-from twilio.base.exceptions import TwilioException
+from twilio.base.exceptions import TwilioException, TwilioRestException
 import requests
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -181,8 +181,12 @@ class VerifyOTP(View):
         
         otp = str(req.json()['code'])
         message = f"Your one time password for login is {otp}"
-
-        self.twilio_client.messages.create(to=f"+{phone_number}", from_=self.sender, body=message)
+        try:
+            self.twilio_client.messages.create(to=f"+{phone_number}", from_=self.sender, body=message)
+        except TwilioRestException:
+            return JsonResponse({'status': 300, 'message': "Trilio doesn't allow sending sms to \
+                unverified numbers, can you try registering you phone number on Trilio"})
+        
         return JsonResponse({'status': 201, 'message': 'OTP sent successfully'})
 
     def post(self, request):
