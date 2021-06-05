@@ -27,7 +27,7 @@ body{
 }
 
 input::placeholder{
-    color: grey !important;
+    color: black !important;
 }
 
 .form-label{

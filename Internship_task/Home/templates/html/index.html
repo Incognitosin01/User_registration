@@ -38,27 +38,23 @@
               <tr>
                 <th width="30%">Name</th>
                 <td width="2%">:</td>
-                <td>Sanket nangare 1</td>
+                <td>{{request.user.first_name}} {{request.user.last_name}}</td>
               </tr>
               <tr>
                 <th width="30%">Email	</th>
                 <td width="2%">:</td>
-                <td>sknangare@mitaoe.ac.in</td>
+                <td>{{request.user.email}}</td>
               </tr>
-              <tr>
-                <th width="30%">Gender</th>
-                <td width="2%">:</td>
-                <td>Male</td>
-              </tr>
+              
               <tr>
                 <th width="30%">Address</th>
                 <td width="2%">:</td>
-                <td>pune</td>
+                <td>{{addr}}</td>
               </tr>
               <tr>
                 <th width="30%">Phone number</th>
                 <td width="2%">:</td>
-                <td>123457899</td>
+                <td>{{request.user.contact}}</td>
               </tr>
             </table>
           </div>
@@ -70,8 +66,10 @@
           </div>
           <div class="card-body pt-0">
               <p>Documents submitted</p>
-              <p>Aadhar card</p>
-              <p>Pan card</p>
+
+              <b>Adhaar Card</b><p>{{aadhar}}</p>
+              <b>Marksheet</b><p>{{marks}}</p>
+              <b>Resume</b><p>{{resume}}</p>
 
           </div>
         </div>
@@ -85,11 +83,14 @@
 
 
 <div class="container">
-  <div class="vertical-center">
-    <button onclick="check()">Edit </button>
-    
-
-  </div>
+  <div class="col-sm-3">
+    <button class="btn btn-outline-dark w-100 mb-3" name="submit" value="submit" type="submit" onclick="check()"><h5>EDIT</h5>
+        
+    </button>
+    <button class="btn btn-outline-dark w-100 mb-3" name="submit" value="submit" type="submit" onclick="logout()"><h5>LOG OUT</h5>
+        
+    </button>
+</div>
 </div>		      
 <!-- partial -->
            
@@ -104,6 +105,9 @@
     <script>
       function check(){
         location.pathname = "{% url 'Home:application' %}"
+      }
+      function logout(){
+        location.pathname = "{% url 'Home:logout' %}"
       }
     </script>
 	</body>
