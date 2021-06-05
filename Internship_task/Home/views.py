@@ -20,7 +20,7 @@ from twilio.base.exceptions import TwilioException
 import requests
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from django.core.files.storage import FileSystemStorage
+
 
 class Registration(View):
     def __init__(self):
@@ -141,7 +141,6 @@ def application(request):
         user=CustomUser.objects.get(email=request.user.email)
         try:
             app = Application.objects.get(F_key=request.user)
-            # app.delete()
             app.address=address
             app.aadhar=adhaar
             app.Marksheet=marksheet
@@ -160,7 +159,6 @@ def application(request):
             fail_silently=False,
         )
         resume_url = f"{request.scheme}://{request.get_host()}/media/{app.resume}"
-        print(resume_url,resume)
         marksheet_url = f"{request.scheme}://{request.get_host()}/media/{app.Marksheet}"
         adhaar_url = f"{request.scheme}://{request.get_host()}/media/{app.aadhar}"
     return render(request,'html/index.html',{'addr':address,'resume':resume_url,'marks':marksheet_url,'aadhar':adhaar_url})
