@@ -26,7 +26,7 @@
         <main>
             <div class="container row " style="margin-top: 50px;">
                 <div class="col-md-7 col-lg-8  mx-auto">
-                    <form action="{% url 'Home:app_submit' %}" method="POST">
+                    <form action="{% url 'Home:app_submit' %}" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         <h2
                             style="text-align: center;font-family: Georgia;color: black; font-weight: 600;margin-top: 10px; margin-bottom: 20px;">
@@ -35,33 +35,33 @@
                         <div class="row g-4 mx-auto" style="margin-top: 30px;">
                             <div class="col-sm-6 mx-auto" style="color: black;">
                                 <label class="form-label" for="fname" style="font-size:18px;">First name</label>
-                                <input type="text" name="fname" class="form-control" value={{request.user.first_name}}>
+                                <input type="text" name="fname" value={{request.user.first_name}} class="form-control" disabled>
                             </div>
                             <div class="col-sm-6 mx-auto" style="color: black;">
                                 <label class="form-label" for="lname" style="font-size:18px;">Last name</label>
-                                <input type="text" name="lname" class="form-control" value={{request.user.last_name}} >
+                                <input type="text" name="lname" value={{request.user.last_name}} class="form-control" disabled>
                             </div>
 
 
                             <div class="col-12 mx-auto" style="color: black;">
                                 <label class="form-label" for="email" style="font-size:18px;">Email</label>
-                                <input type="email" name="email" class="form-control" required value={{request.user.email}} >
+                                <input type="email" name="email" class="form-control" value={{request.user.email}} disabled>
                             </div>
                             <div class="col-12 mx-auto" style="color: black;">
                                 <label class="form-label" for="address" style="font-size:18px;">Address</label>
-                                <input type="text" name="address" class="form-control">
+                                <input type="text" name="address" class="form-control" required>
                             </div>
                             <div class="col-12 mx-auto" style="color: black;">
                                 <label class="form-label" for="resume" style="font-size:18px;">Resume</label>
-                                <input type="file" name="resume" class="form-control">
+                                <input type="file" name="resume" class="form-control" required>
                             </div>
                             <div class="col-12 mx-auto" style="color: black;">
                                 <label class="form-label" for="adhaar" style="font-size:18px;">Adhaar Card</label>
-                                <input type="file" name="adhaar" class="form-control">
+                                <input type="file" name="adhaar" class="form-control" required>
                             </div>
                             <div class="col-12 mx-auto" style="color: black;">
                                 <label class="form-label" for="Marksheet" style="font-size:18px;">Marksheet</label>
-                                <input type="file" name="marksheet" class="form-control">
+                                <input type="file" name="marksheet" class="form-control" required>
                             </div>
                             <div class="col-12 mx-auto">
                                 <button class="btn btn-outline-dark "

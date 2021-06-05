@@ -15,11 +15,11 @@ class CustomUser(AbstractUser):
 
 class Application(models.Model):
 
-  F_key = models.ForeignKey(CustomUser,default=None,on_delete=models.CASCADE, unique=True)
+  F_key = models.ForeignKey(CustomUser,default=None,on_delete=models.CASCADE)
   address = models.TextField(max_length=250)
-  resume = models.FileField()
-  aadhar = models.FileField()
-  Marksheet = models.FileField()
+  resume = models.FileField(upload_to='media')
+  aadhar = models.FileField(upload_to='media')
+  Marksheet = models.FileField(upload_to='media')
 
   # def _str_(self):
   #   return f"{self.CustomUser.get_full_name()}"

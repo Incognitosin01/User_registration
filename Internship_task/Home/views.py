@@ -110,9 +110,11 @@ def profile(request):
     if not app:
         messages.error(request,'Please fill application form first')
         return redirect(reverse('Home:application'))
-    
     app = Application.objects.values('address','resume','Marksheet','aadhar').get(F_key=request.user)
-    return render(request, 'html/index.html',{'addr':app['address'],'resume':app['resume'],'marks':app['Marksheet'],'aadhar':app['aadhar']})
+    resume_url = f"{request.scheme}://{request.get_host()}/media/{app['resume']}"
+    marksheet_url = f"{request.scheme}://{request.get_host()}/media/{app['Marksheet']}"
+    adhaar_url = f"{request.scheme}://{request.get_host()}/media/{app['aadhar']}"
+    return render(request,'html/index.html',{'addr':app['address'],'resume':resume_url,'marks':marksheet_url,'aadhar':adhaar_url})
 
 def user_app(request):
     if request.user.is_anonymous:
@@ -122,33 +124,34 @@ def user_app(request):
 
 def application(request):
     if request.method=="POST":
-        email= request.POST['email']
         address = request.POST['address']
-        resume = request.POST['resume']
-        adhaar = request.POST['adhaar']
-        marksheet = request.POST['marksheet']
+        resume = request.FILES['resume']
+        adhaar = request.FILES['adhaar']
+        marksheet = request.FILES['marksheet']
         user=CustomUser.objects.get(email=request.user.email)
         try:
             app = Application.objects.get(F_key=request.user)
-            app=Application.objects.get(F_key=request.user)
             app.address=address
             app.aadhar=adhaar
             app.Marksheet=marksheet
             app.resume=resume
             app.save()
         except Application.DoesNotExist:
-            application = Application(F_key=user,address=address, aadhar=adhaar, resume=resume, Marksheet=marksheet)
-            application.save()
+            app = Application(F_key=user,address=address, aadhar=adhaar, resume=resume, Marksheet=marksheet)
+            app.save()
     
         
         send_mail(
             "Application",
             "Your Application has submitted successfully",
             settings.EMAIL_HOST_USER,
-            [email],
+            [request.user.email],
             fail_silently=False,
         )
-    return render(request,'html/index.html',{'addr':address,'resume':resume,'marks':marksheet,'aadhar':adhaar})
+        resume_url = f"{request.scheme}://{request.get_host()}/media/{app.resume}"
+        marksheet_url = f"{request.scheme}://{request.get_host()}/media/{app.Marksheet}"
+        adhaar_url = f"{request.scheme}://{request.get_host()}/media/{app.aadhar}"
+    return render(request,'html/index.html',{'addr':address,'resume':resume_url,'marks':marksheet_url,'aadhar':adhaar_url})
 
 
 @method_decorator(csrf_exempt, name='dispatch')
