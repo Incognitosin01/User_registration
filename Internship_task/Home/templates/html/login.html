@@ -14,6 +14,7 @@
 {% endblock %}
 
 {%block content%}
+<div id="spinner"><div></div></div>
 <aside id="messages">
 {% include 'messages.html' %}
 </aside>
@@ -59,6 +60,11 @@
             setTimeout(()=>{messageBox.removeChild(this)}, 2000)
         }
 
+        function spinner(hide=false){
+            const spinner = document.querySelector("#spinner");
+            spinner.style.display = hide?"none":"flex";
+        }
+
     window.addEventListener('DOMContentLoaded', ()=>{
 
         const phoneInputField = document.querySelector("input[type=tel]");
@@ -77,8 +83,10 @@
         // Will be applicable with successful otp verification
         otp_button.addEventListener('click', event=>{
             event.preventDefault();
+            spinner();
             if(!phoneInput.isValidNumber()){
                 notify(500, 'Invalid phone number')
+                spinner(true);
                 return;
             }
             const number = phoneInput.getNumber();
@@ -94,7 +102,8 @@
                     otp_button.dataset.sent = 'true';
                     otp_button.value = 'Verify OTP'
                     otp.parentElement.classList.remove('hidden');
-                }).catch(()=>{})
+                    spinner(true);
+                }).catch(()=>{spinner(true)})
             }else{
                 const filteredNumber = number.slice(country_code.length+number.startsWith("+"));
                 fetch("{%url 'Home:otp'%}", {
@@ -111,7 +120,8 @@
                         otp_button.classList.add('hidden');
                         login_button.classList.remove('hidden');
                     }
-                })
+                    spinner(true);
+                }).catch(()=>{spinner(true)});
             }
         })
 
