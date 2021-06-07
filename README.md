@@ -8,6 +8,10 @@ In order to setup twilio to send a message to the user, follow the instructions 
 - Download this repository as [zip](https://github.com/Incognitosin01/User_registration/archive/refs/heads/main.zip) or clone it using the github repository link https://github.com/Incognitosin01/User_registration.git
 
 - `cd` to the working directory
+- Download required modules
+  ```bash
+  pip install -r requirements.txt
+  ```
 - Setup database and static files using following commands
  ```bash
  cd Internship_task
