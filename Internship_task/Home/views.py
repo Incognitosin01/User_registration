@@ -6,6 +6,7 @@ from django.conf import settings
 from django.urls import reverse
 from django.contrib import messages
 import hashlib
+import urllib.parse as encoder
 import os
 import json
 from django.core.mail import EmailMultiAlternatives
@@ -161,19 +162,20 @@ class VerifyOTP(View):
     def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
         self.otp_url = 'https://api.generateotp.com/'
-        try:
-            self.twilio_client = Client()
-            self.sender = os.getenv('TWILIO_NUMBER')
-        except TwilioException:
-            from .twilio_conf import TWILIO_NUMBER, AUTH_TOKEN, ACCOUNT_SID
-            self.twilio_client = Client(ACCOUNT_SID, AUTH_TOKEN)
-            self.sender = TWILIO_NUMBER
+        # try:
+        #     self.twilio_client = Client()
+        #     self.sender = os.getenv('TWILIO_NUMBER')
+        # except TwilioException:
+        #     from .twilio_conf import TWILIO_NUMBER, AUTH_TOKEN, ACCOUNT_SID
+        #     self.twilio_client = Client(ACCOUNT_SID, AUTH_TOKEN)
+        #     self.sender = TWILIO_NUMBER
 
     def get(self, request):
         phone_number = request.GET['phone']
         country_code = request.GET['country_code']
         
         country_code_size = len(country_code)
+        ph=phone_number[country_code_size:]
 
         user = CustomUser.objects.filter(contact=f"+{phone_number}")
         if not user:
@@ -189,13 +191,35 @@ class VerifyOTP(View):
         
         otp = str(req.json()['code'])
         message = f"Your one time password for login is {otp}"
-        try:
-            self.twilio_client.messages.create(to=f"+{phone_number}", from_=self.sender, body=message)
-        except TwilioRestException:
-            return JsonResponse({'status': 300, 'message': "Trilio doesn't allow sending sms to \
-                unverified numbers, can you try registering you phone number on Trilio"})
+
+        # try:
+        #     self.twilio_client.messages.create(to=f"+{phone_number}", from_=self.sender, body=message)
+        # except TwilioRestException:
+        #     return JsonResponse({'status': 300, 'message': "Trilio doesn't allow sending sms to \
+        #         unverified numbers, can you try registering you phone number on Trilio"})
         
-        return JsonResponse({'status': 201, 'message': 'OTP sent successfully'})
+        #request.get('http://bullet1.sdctechnologies.co.in:8080/vendorsms/pushsms.aspx?user=developer&password=123456&msisdn='+phone_number+'&sid=SDCTEC&msg=test%20message&fl=0&gwid=2')
+        params = {
+                    "user": "developer",
+                    "password": 123456,
+                    "msisdn": ph,
+                    "sid": "SDCTEC",
+                    "msg": "Your OTP is "+otp,
+                    "fl": 0,
+                    "gwid": 2
+                }
+
+        link = "http://bullet1.sdctechnologies.co.in:8080/vendorsms/pushsms.aspx"
+
+
+        req = requests.get(link+"?"+encoder.urlencode(params))
+        print(link+"?"+encoder.urlencode(params))
+        if req.status_code == 200:
+            print("success")
+            return JsonResponse({'status': 200, 'message': 'OTP sent successfully'})
+        else:
+            print("failed")
+        return JsonResponse({'status': 201, 'message': 'OTP failed'})
 
     def post(self, request):
         p = json.loads(request.body)

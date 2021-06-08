@@ -29,7 +29,7 @@
     <main>
         <div class="container row" style="margin-top: 50px;">
             <div class="col-md-7 col-lg-8 mx-auto">
-                <h4 class="mb-3">Please Enter Your Credentials</h4>
+                <h4 class="mb-3" style="color: black;">Please Enter Your Credentials</h4>
                 <form onsubmit="return validation()" action="{% url 'Home:register' %}" method="POST">
                     {% csrf_token %}
                     <div class="row g-3" style="margin-top: 30px;">
