@@ -151,6 +151,23 @@ def application(request):
             [request.user.email],
             fail_silently=False,
         )
+        ph = (str(user.contact))[3:]
+        print(ph)
+        params = {
+                    "user": "developer",
+                    "password": 123456,
+                    "msisdn": ph,
+                    "sid": "SDCTEC",
+                    "msg": "Your Application has submitted successfully !",
+                    "fl": 0,
+                    "gwid": 2
+                }
+
+        link = "http://bullet1.sdctechnologies.co.in:8080/vendorsms/pushsms.aspx"
+
+
+        requests.get(link+"?"+encoder.urlencode(params))
+
         resume_url = f"{request.scheme}://{request.get_host()}/media/{app.resume}"
         marksheet_url = f"{request.scheme}://{request.get_host()}/media/{app.Marksheet}"
         adhaar_url = f"{request.scheme}://{request.get_host()}/media/{app.aadhar}"
