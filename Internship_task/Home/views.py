@@ -178,14 +178,8 @@ def application(request):
 class VerifyOTP(View):
     def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
-        self.otp_url = 'https://api.generateotp.com/'
-        # try:
-        #     self.twilio_client = Client()
-        #     self.sender = os.getenv('TWILIO_NUMBER')
-        # except TwilioException:
-        #     from .twilio_conf import TWILIO_NUMBER, AUTH_TOKEN, ACCOUNT_SID
-        #     self.twilio_client = Client(ACCOUNT_SID, AUTH_TOKEN)
-        #     self.sender = TWILIO_NUMBER
+        # self.otp_url = 'https://api.generateotp.com/'
+        self.otp_url = 'https://staging-otp.herokuapp.com'
 
     def get(self, request):
         phone_number = request.GET['phone']
@@ -196,12 +190,11 @@ class VerifyOTP(View):
 
         user = CustomUser.objects.filter(contact=f"+{phone_number}")
         if not user:
-            
             return JsonResponse({'status': 302,'message': 'Number you\'re trying to log in is not registered'})
         user = user.first()
         if not user.is_active:
             return JsonResponse({'status':303,'message':'Email not verified'})
-        req = requests.post(f"{self.otp_url}/generate", data={'initiator_id': phone_number[country_code_size:]})
+        req = requests.put(f"{self.otp_url}/generate", data={'initiator_id': phone_number[country_code_size:]})
 
         if req.status_code != 201:
             return JsonResponse({'status': 500, 'message': 'Error occurred, please retry'})
@@ -227,7 +220,6 @@ class VerifyOTP(View):
                 }
 
         link = "http://bullet1.sdctechnologies.co.in:8080/vendorsms/pushsms.aspx"
-
 
         req = requests.get(link+"?"+encoder.urlencode(params))
         print(link+"?"+encoder.urlencode(params))
