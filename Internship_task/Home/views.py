@@ -235,4 +235,7 @@ class VerifyOTP(View):
         otp = p['otp_code']
         phone_number = p['phone']
         req = requests.post(f"{self.otp_url}/validate/{otp}/{phone_number}")
-        return JsonResponse(req.json())
+#         return JsonResponse(req.json())
+        if 'success' in req.json().keys():
+            return JsonResponse({'status': 200, 'message': 'OTP verified'})
+        return JsonResponse({'status': 301, 'message': 'OTP invalid or expired'})
